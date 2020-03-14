@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  back:
+    build:
+      context: ./flaskrest
+      dockerfile: Dockerfile
+    volumes:
+      - ./sudact.sqlite:/app/sudact.sqlite
+    ports:
+      - 3000:3000
+  front:
+    build:
+      context: ./django
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
