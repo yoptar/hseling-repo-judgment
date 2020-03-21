@@ -52,6 +52,8 @@ def doc(req: HttpRequest, doc_id: int):
     data = requests.get(f'{front}/documents/{doc_id}').json()
     meta = {i: data["metadata"][i] for i in ["article", "region", "court", "date", "number", "judge", "accused"]
             if i in data["metadata"]}
+    if isinstance(meta['accused'], list):
+        meta['accused'] = ', '.join(meta['accused'])
     pars = {i: data["parsed"][i] for i in ["fabula", "meditation", "prove", "witness"] if i in data["parsed"]}
     download_link = f'http://localhost:3000/documents/{doc_id}/download'
 
