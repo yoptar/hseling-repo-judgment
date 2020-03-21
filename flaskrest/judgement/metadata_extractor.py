@@ -129,7 +129,16 @@ def get_article(doc_str):
     for line in doc_str.split("<"):
         if "Судебная практика по применению" in line:
             articles.append(line.split("ст.")[-1].strip())
+
+    # выбираем из шапки
+    header = get_first(doc_str)
+    if "ст." in "".join(header):
+        splitted_header = "".join(header).split("ст.")
+        article = BeautifulSoup(splitted_header[-1]).a
+        if article:
+            articles.append(article.string)
     articles = ", ".join(articles)
+
     if articles == "":
         articles = "нет информации по судебной практике"
     return articles
@@ -175,8 +184,7 @@ def get_accused_lines(doc_str):
     splitted_lines = splitting_text(header)
     accused_lines = []
     for line in splitted_lines:
-        if ("осужденн" in line or "в отношении" in line or "подсудим" in line
-        or " к " in line) and len(line) < 300:
+        if ("осужденн" in line or "в отношении" in line or "подсудим" in line or " к " in line) and len(line) < 300:
             accused_lines.append(line)
 
     # короткий путь для сокращения вариантов
@@ -185,10 +193,11 @@ def get_accused_lines(doc_str):
             accused_lines = [line]
         elif " к " in line and len(line) < 50:
             accused_lines = [line]
-    if len(accused_lines) > 1:
-        return ', '.join(accused_lines)
-    else:
-        return ' '.join(accused_lines)
+    # if len(accused_lines) > 1:
+    #     return ', '.join(accused_lines)
+    # else:
+    #     return ' '.join(accused_lines)
+    return accused_lines
 
 
 def kill_doubles(name_list):
@@ -282,4 +291,8 @@ def get_metadict(doc_str):
     metadict["judge"] = get_judge(doc_str)
     metadict["article"] = get_article(doc_str)
     metadict["accused"] = get_accused_name(doc_str)
+
+    for key in metadict:
+        if not metadict[key]:
+            metadict[key] = "undefined"
     return metadict
