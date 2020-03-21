@@ -19,5 +19,5 @@ from . import views
 
 urlpatterns = [
     path('', views.search, name='search'),
-    path(r'doc<int:doc_id>', views.doc, name='doc'),
+    path(r'doc<int:doc_id>', views.doc, name='doc')
 ]

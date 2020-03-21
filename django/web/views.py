@@ -1,7 +1,6 @@
 from urllib.parse import urlencode
 
 from django.http import HttpResponse, HttpRequest
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import requests
 
@@ -54,5 +53,7 @@ def doc(req: HttpRequest, doc_id: int):
     meta = {i: data["metadata"][i] for i in ["article", "region", "court", "date", "number", "judge", "accused"]
             if i in data["metadata"]}
     pars = {i: data["parsed"][i] for i in ["fabula", "meditation", "prove", "witness"] if i in data["parsed"]}
+    download_link = f'http://localhost:3000/documents/{doc_id}/download'
+
     return render(req, 'lawdoc.html', {"pars": pars, "url": data["url"], "meta": meta,
-                                       "header": data["header"]})
+                                       "header": data["header"], "download_link": download_link})
